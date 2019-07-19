@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(":json-comparison-domain")
+    implementation project(":json-comparison-repository")
+    
+    implementation "com.flipkart.zjsonpatch:zjsonpatch:$zjsonPatchVersion"
+}

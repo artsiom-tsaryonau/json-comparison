@@ -3,4 +3,11 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 rootProject.name = 'json-comparison'
+
+include 'json-comparison-domain'
+include 'json-comparison-application'
+include 'json-comparison-rest'
+include 'json-comparison-service'
+include 'json-comparison-repository'

@@ -24,7 +24,7 @@
 
   Most Checks are configurable, be sure to consult the documentation.
 
-  To completely disable a check, just comment it out or delete it from the file.
+  To completely disable a check, just result it out or delete it from the file.
 
   Finally, it is worth reading the documentation.
 
@@ -42,7 +42,7 @@
     <property name="fileExtensions" value="java, properties, xml"/>
 
     <module name="SuppressionFilter">
-        <property name="file" value="config/checkstyle/suppressions.xml"/>
+        <property name="file" value="${config_loc}/suppressions.xml"/>
     </module>
 
     <!-- Excludes all 'module-info.java' files              -->
@@ -89,9 +89,10 @@
         <!-- See https://checkstyle.org/config_javadoc.html -->
         <module name="JavadocMethod"/>
         <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
         <module name="JavadocStyle"/>
-        <module name="MissingJavadocMethod"/>
+        <module name="MissingJavadocMethod">
+            <property name="allowMissingPropertyJavadoc" value="true" />
+        </module>
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See https://checkstyle.org/config_naming.html -->
@@ -116,7 +117,9 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See https://checkstyle.org/config_sizes.html -->
-        <module name="LineLength"/>
+        <module name="LineLength">
+            <property name="max" value="120"/>
+        </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
 
@@ -150,7 +153,10 @@
         <!-- See https://checkstyle.org/config_coding.html -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">
+            <property name="ignoreSetter" value="true"/>
+            <property name="ignoreConstructorParameter" value="true"/>
+        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber"/>
@@ -161,7 +167,6 @@
 
         <!-- Checks for class design                         -->
         <!-- See https://checkstyle.org/config_design.html -->
-        <module name="DesignForExtension"/>
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
@@ -170,7 +175,6 @@
         <!-- Miscellaneous other checks.                   -->
         <!-- See https://checkstyle.org/config_misc.html -->
         <module name="ArrayTypeStyle"/>
-        <module name="FinalParameters"/>
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 

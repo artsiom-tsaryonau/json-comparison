@@ -1,0 +1,8 @@
+plugins {
+    id 'org.springframework.boot' version "2.1.6.RELEASE"
+}
+
+dependencies {
+    implementation project(':json-comparison-domain')
+    implementation project(':json-comparison-rest')
+}
