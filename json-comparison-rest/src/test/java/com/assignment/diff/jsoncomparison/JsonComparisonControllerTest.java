@@ -29,8 +29,6 @@ public class JsonComparisonControllerTest {
     private static final String COMPARISON_ID = "comparisonId";
     private static final String JSON_ENCODED = "eyJuYW1lIjoiSm9obiIsICJzdXJuYW1lIjoiQmxhbmsiLCAiYWRkcmVzcyI6IH" +
         "sgInN0cmVldCI6ICI1dGggQXZlbnVlIiB9IH0=";
-    private static final String JSON_DECODED = "{\"name\":\"John\", \"surname\":\"Blank\", \"address\": " +
-        "{ \"street\": \"5th Avenue\" } }";
     private JsonComparisonController controller;
     private IJsonComparisonStoringService storingService;
     private IJsonComparisonResultService comparisonService;
@@ -44,7 +42,7 @@ public class JsonComparisonControllerTest {
 
     @Test
     public void testUploadLeftSide() {
-        storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON_DECODED);
+        storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON_ENCODED);
         expectLastCall();
         replay(storingService, comparisonService);
         JsonResponseMessage<String> responseMessage = controller.uploadLeftSide(COMPARISON_ID, JSON_ENCODED);
@@ -54,7 +52,7 @@ public class JsonComparisonControllerTest {
 
     @Test
     public void testUploadRightSide() {
-        storingService.updateOrCreateRightSide(COMPARISON_ID, JSON_DECODED);
+        storingService.updateOrCreateRightSide(COMPARISON_ID, JSON_ENCODED);
         expectLastCall();
         replay(storingService);
         JsonResponseMessage<String> responseMessage = controller.uploadRightSide(COMPARISON_ID, JSON_ENCODED);
@@ -68,7 +66,7 @@ public class JsonComparisonControllerTest {
         replay(comparisonService);
         JsonResponseMessage<JsonComparisonResultMessage> responseMessage =
             controller.checkComparisonResult(COMPARISON_ID);
-        assertEquals(new JsonResponseMessage<JsonComparisonResultMessage>(OK, createResponseMessage()), responseMessage);
+        assertEquals(new JsonResponseMessage<>(OK, createResponseMessage()), responseMessage);
         verify(comparisonService);
     }
 

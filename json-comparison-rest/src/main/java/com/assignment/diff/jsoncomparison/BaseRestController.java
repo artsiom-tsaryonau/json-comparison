@@ -1,6 +1,5 @@
 package com.assignment.diff.jsoncomparison;
 
-import com.assignment.diff.jsoncomparison.exception.InvalidJsonException;
 import com.assignment.diff.jsoncomparison.exception.NoComparisonFoundException;
 import com.assignment.diff.jsoncomparison.exception.NotCompletedComparisonException;
 import com.assignment.diff.jsoncomparison.exception.NotUpdatableCompleteComparisonException;
@@ -27,7 +26,6 @@ public abstract class BaseRestController {
     private static final String ERROR = "ERROR";
     private static final String DEFAULT_ERROR_MESSAGE = "Internal server error";
     private static final String SUCCESSFULLY_STORED_MESSAGE = "Successfully stored";
-    private static final String INVALID_JSON = "Invalid JSON";
 
     /**
      * Creates successfully stored message.
@@ -62,12 +60,5 @@ public abstract class BaseRestController {
     private JsonResponseMessage<String> handleException(Exception e) {
         LOGGER.error("Internal error occurred.", e);
         return new JsonResponseMessage<>(ERROR, DEFAULT_ERROR_MESSAGE);
-    }
-
-    @ExceptionHandler(InvalidJsonException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    private JsonResponseMessage<String> handleException(InvalidJsonException e) {
-        LOGGER.error("Invalid data error.", e);
-        return new JsonResponseMessage<>(ERROR, INVALID_JSON);
     }
 }

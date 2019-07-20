@@ -2,8 +2,6 @@ package com.assignment.diff.jsoncomparison;
 
 import com.assignment.diff.jsoncomparison.api.IJsonComparisonResultService;
 import com.assignment.diff.jsoncomparison.api.IJsonComparisonStoringService;
-import com.assignment.diff.jsoncomparison.util.Base64DecodeUtils;
-import com.assignment.diff.jsoncomparison.util.JsonUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +50,7 @@ public class JsonComparisonController extends BaseRestController {
     public JsonResponseMessage<String> uploadLeftSide(@PathVariable("id") String comparisonId,
                                                       @RequestBody String payload) {
         LOGGER.info("Updating left side of comparison {}.", comparisonId);
-        String json = Base64DecodeUtils.decode(payload);
-        JsonUtils.validateJson(json);
-        storingService.updateOrCreateLeftSide(comparisonId, json);
+        storingService.updateOrCreateLeftSide(comparisonId, payload);
         return createSuccessfullyStoredMessage();
     }
 
@@ -68,9 +64,7 @@ public class JsonComparisonController extends BaseRestController {
     public JsonResponseMessage<String> uploadRightSide(@PathVariable("id") String comparisonId,
                                                        @RequestBody String payload) {
         LOGGER.info("Updating right side of comparison {}.", comparisonId);
-        String json = Base64DecodeUtils.decode(payload);
-        JsonUtils.validateJson(json);
-        storingService.updateOrCreateRightSide(comparisonId, json);
+        storingService.updateOrCreateRightSide(comparisonId, payload);
         return createSuccessfullyStoredMessage();
     }
 

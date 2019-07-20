@@ -11,13 +11,13 @@ package com.assignment.diff.jsoncomparison;
  */
 public enum ComparisonDecision {
     /** Same JSON documents. */
-    SAME("JSON documents are the same"),
+    SAME("JSON binary data is the same"),
     /** JSON documents have different size/length. */
-    DIFFERENT_SIZE("JSON documents have different size"),
+    DIFFERENT_SIZE("JSON binary data has different size"),
     /** JSON documents are different. */
-    DIFFERENT("JSON documents are different"),
+    DIFFERENT("JSON binary data is different"),
     /** Not compared yet. */
-    NONE("JSON documents are not compared yet");
+    NONE("JSON binary data is not compared yet");
 
     private String message;
 

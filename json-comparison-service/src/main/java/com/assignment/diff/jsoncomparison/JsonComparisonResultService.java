@@ -3,7 +3,7 @@ package com.assignment.diff.jsoncomparison;
 import com.assignment.diff.jsoncomparison.api.IJsonComparisonResultService;
 import com.assignment.diff.jsoncomparison.exception.NoComparisonFoundException;
 import com.assignment.diff.jsoncomparison.exception.NotCompletedComparisonException;
-import com.assignment.diff.jsoncomparison.util.JsonUtils;
+import com.assignment.diff.jsoncomparison.util.StringComparisonUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +62,7 @@ public class JsonComparisonResultService implements IJsonComparisonResultService
         } else if (leftSide.equals(rightSide)) {
             result.setDecision(ComparisonDecision.SAME);
         } else {
-            String differences = JsonUtils.plainDiff(result.getLeftSide(), result.getRightSide());
+            String differences = StringComparisonUtils.plainDiff(result.getLeftSide(), result.getRightSide());
             result.setDecision(ComparisonDecision.DIFFERENT);
             result.setDifferences(differences);
         }

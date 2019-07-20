@@ -21,7 +21,7 @@ import org.junit.Test;
  * @author Artsiom Tsaryonau
  */
 public class JsonComparisonStoringServiceTest {
-    private static final String JSON = "{\"name\":\"John\", \"surname\":\"LeBlank\"}";
+    private static final String JSON = "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbSJ9";
     private static final String COMPARISON_ID = "comparisonId";
 
     private IJsonComparisonStoringService storingService;

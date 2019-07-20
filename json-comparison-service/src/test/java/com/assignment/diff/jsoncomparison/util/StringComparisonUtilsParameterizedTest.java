@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Parameterized tests for {@link JsonUtils} that tests json comparison.
+ * Parameterized tests for {@link StringComparisonUtils} that tests json comparison.
  * <p/>
  * Copyright (C) 2019
  * <p/>
@@ -20,7 +20,7 @@ import java.util.Collection;
  * @author Artsiom Tsaryonau
  */
 @RunWith(Parameterized.class)
-public class JsonUtilsParameterizedTest {
+public class StringComparisonUtilsParameterizedTest {
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
@@ -41,7 +41,7 @@ public class JsonUtilsParameterizedTest {
     private String rightComparisonSide;
     private String differences;
 
-    public JsonUtilsParameterizedTest(String leftSide, String rightSide, String diff) {
+    public StringComparisonUtilsParameterizedTest(String leftSide, String rightSide, String diff) {
         this.leftComparisonSide = leftSide;
         this.rightComparisonSide = rightSide;
         this.differences = diff;
@@ -49,6 +49,6 @@ public class JsonUtilsParameterizedTest {
 
     @Test
     public void test() {
-        assertEquals(differences, JsonUtils.plainDiff(leftComparisonSide, rightComparisonSide));
+        assertEquals(differences, StringComparisonUtils.plainDiff(leftComparisonSide, rightComparisonSide));
     }
 }

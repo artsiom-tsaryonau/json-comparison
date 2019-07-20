@@ -1,18 +1,13 @@
 package com.assignment.diff.jsoncomparison.util;
 
-import com.assignment.diff.jsoncomparison.exception.InvalidJsonException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Utility class for JSON manipulation.
+ * Utility class for String manipulation.
  * <p/>
  * Copyright (C) 2019
  * <p/>
@@ -20,38 +15,11 @@ import java.util.stream.Collectors;
  *
  * @author Artsiom Tsaryonau
  */
-public final class JsonUtils {
+public final class StringComparisonUtils {
     private static final String DIFF_FORMAT = "[startIndex=%d:length=%d]";
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private JsonUtils() {
+    private StringComparisonUtils() {
         throw new AssertionError("Cannot instantiate utility class");
-    }
-
-    /**
-     * Performs conversion from JSON to {@link JsonNode}.
-     * @param jsonString json string
-     * @return Json Node instance
-     */
-    public static JsonNode convertToNode(String jsonString) {
-        try {
-            return OBJECT_MAPPER.readTree(jsonString);
-        } catch (IOException e) {
-            // before storing every JSON is validated so such case is hardly possible
-            throw new InvalidJsonException(e);
-        }
-    }
-
-    /**
-     * Checks if JSON string is valid by trying to parse it.
-     * @param jsonString json to validate
-     */
-    public static void validateJson(String jsonString) {
-        try {
-            OBJECT_MAPPER.readTree(jsonString);
-        } catch (IOException e) {
-            throw new InvalidJsonException(e);
-        }
     }
 
     /**

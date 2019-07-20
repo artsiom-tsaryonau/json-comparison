@@ -23,9 +23,10 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 public class JsonComparisonResultServiceTest {
     private static final String COMPARISON_ID = "comparisonId";
-    private static final String JSON_1 = "{\"name\":\"John\", \"surname\":\"LeBlank\"}";
-    private static final String JSON_2 = "{\"name\":\"John\", \"surname\":\"Blank\"}";
-    private static final String JSON_3 = "{\"name\":\"John\", \"surname\":\"Brandon\"}";
+    private static final String JSON_1 = "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbSJ9";
+    private static final String JSON_2 =
+        "eyJuYW1lIjoiSm9obiIsICJzdXJuYW1lIjoiTGVCbGFuayIsICJhZGRyZXNzIjogeyAic3RyZWV0IjogIjV0aCBBdmVudWUiIH0gfQ==";
+    private static final String JSON_3 = "eyJwbGFuZXQiIDogImhlYXZlbiIoatbhtkUiIDogIjFrbSJ9";
     private static final String JSON_3_1_DIFF = "[startIndex=27:length=7]";
 
     private JsonComparisonResultService comparisonResultService;
