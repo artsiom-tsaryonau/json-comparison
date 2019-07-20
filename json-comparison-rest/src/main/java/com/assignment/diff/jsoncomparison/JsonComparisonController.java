@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Artsiom Tsaryonau
  */
 @RestController
-public class JsonComparisonController {
+public class JsonComparisonController extends BaseRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonComparisonController.class);
 
     private final IJsonComparisonStoringService storingService;
@@ -55,7 +55,7 @@ public class JsonComparisonController {
         String json = Base64DecodeUtils.decode(payload);
         JsonUtils.validateJson(json);
         storingService.updateOrCreateLeftSide(comparisonId, json);
-        return new JsonResponseMessage<>("OK", "Successfully stored");
+        return createSuccessfullyStoredMessage();
     }
 
     /**
@@ -71,7 +71,7 @@ public class JsonComparisonController {
         String json = Base64DecodeUtils.decode(payload);
         JsonUtils.validateJson(json);
         storingService.updateOrCreateRightSide(comparisonId, json);
-        return new JsonResponseMessage<>("OK", "Successfully stored");
+        return createSuccessfullyStoredMessage();
     }
 
     /**
@@ -86,6 +86,6 @@ public class JsonComparisonController {
         JsonComparisonResult result = comparisonService.getOrPerformComparison(comparisonId);
         JsonComparisonResultMessage comparisonMessage = new JsonComparisonResultMessage(comparisonId,
             result.getDecision().getMessage(), result.getDifferences());
-        return new JsonResponseMessage<>("OK", comparisonMessage);
+        return createComparisonResultMessage(comparisonMessage);
     }
 }
