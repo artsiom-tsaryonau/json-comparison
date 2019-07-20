@@ -5,6 +5,8 @@ import com.assignment.diff.jsoncomparison.exception.NoComparisonFoundException;
 import com.assignment.diff.jsoncomparison.exception.NotCompletedComparisonException;
 import com.assignment.diff.jsoncomparison.util.JsonUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import java.util.Set;
 @Service
 @Transactional
 public class JsonComparisonResultService implements IJsonComparisonResultService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonComparisonResultService.class);
 
     private final IJsonComparisonRepository repository;
 
@@ -41,6 +44,7 @@ public class JsonComparisonResultService implements IJsonComparisonResultService
         if (repository.existsById(comparisonId)) {
             JsonComparisonResult result = repository.getOne(comparisonId);
             if (ComparisonDecision.NONE == result.getDecision() && isEligibleForComparison(comparisonId, result)) {
+                LOGGER.info("Performing comparison {}.", comparisonId);
                 result = performComparison(result);
                 repository.save(result);
             }

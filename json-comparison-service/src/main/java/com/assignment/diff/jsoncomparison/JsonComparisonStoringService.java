@@ -3,6 +3,8 @@ package com.assignment.diff.jsoncomparison;
 import com.assignment.diff.jsoncomparison.api.IJsonComparisonStoringService;
 import com.assignment.diff.jsoncomparison.exception.NotUpdatableCompleteComparisonException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class JsonComparisonStoringService implements IJsonComparisonStoringService {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonComparisonStoringService.class);
     private final IJsonComparisonRepository repository;
 
     /**
@@ -42,6 +44,7 @@ public class JsonComparisonStoringService implements IJsonComparisonStoringServi
                 throw new NotUpdatableCompleteComparisonException(comparisonId);
             }
         } else {
+            LOGGER.info("No comparison found with {}. Creating new.", comparisonId);
             JsonComparisonResult newResult = new JsonComparisonResult();
             newResult.setDecision(ComparisonDecision.NONE);
             newResult.setComparisonId(comparisonId);
@@ -61,6 +64,7 @@ public class JsonComparisonStoringService implements IJsonComparisonStoringServi
                 throw new NotUpdatableCompleteComparisonException(comparisonId);
             }
         } else {
+            LOGGER.info("No comparison found with {}. Creating new.", comparisonId);
             JsonComparisonResult newResult = new JsonComparisonResult();
             newResult.setDecision(ComparisonDecision.NONE);
             newResult.setComparisonId(comparisonId);

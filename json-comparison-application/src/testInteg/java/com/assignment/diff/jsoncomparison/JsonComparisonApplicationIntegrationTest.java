@@ -24,7 +24,7 @@ import io.restassured.RestAssured;
 /**
  * Integration tests for {@link JsonComparisonController}.
  *
- * For integration tests I am using akin proto Data Driven Testing.
+ * For integration tests I am using something akin proto Data Driven Testing.
  *
  * <p/>
  * Copyright (C) 2019
