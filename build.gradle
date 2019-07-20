@@ -6,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:2.0.0"
+        classpath "org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:2.1.1"
     }
 }
 
@@ -14,6 +15,7 @@ subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'pmd'
     apply plugin: 'com.github.spotbugs'
+    apply plugin: "org.unbroken-dome.test-sets"
 
     group = 'com.assignment.diff.jsoncomparison'
     version = '0.0.1-SNAPSHOT'
@@ -29,7 +31,7 @@ subprojects {
         configFile = rootProject.file('config/checkstyle/checkstyle.xml')
         sourceSets = [project.sourceSets.main]
     }
-    
+
     pmd {
         ignoreFailures = true
     }
@@ -44,6 +46,12 @@ subprojects {
             html.enabled = true
         }
     }
+
+    testSets {
+        testInteg
+    }
+
+    check.dependsOn testInteg
 
     dependencies {
         implementation "org.apache.commons:commons-lang3:$commonsLangVersion"
