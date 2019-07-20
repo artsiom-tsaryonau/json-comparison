@@ -1,8 +1,5 @@
 package com.assignment.diff.jsoncomparison;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -26,8 +23,7 @@ public class JsonResponseMessage<T> {
      * @param status response status
      * @param content content type
      */
-    @JsonCreator
-    public JsonResponseMessage(@JsonProperty("status") String status, @JsonProperty("content") T content) {
+    public JsonResponseMessage(String status, T content) {
         this.status = status;
         this.content = content;
     }
@@ -36,16 +32,8 @@ public class JsonResponseMessage<T> {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public T getContent() {
         return content;
-    }
-
-    public void setContent(T content) {
-        this.content = content;
     }
 
     @Override
