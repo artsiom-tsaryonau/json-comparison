@@ -29,8 +29,13 @@ subprojects {
         configFile = rootProject.file('config/checkstyle/checkstyle.xml')
         sourceSets = [project.sourceSets.main]
     }
+    
     pmd {
         ignoreFailures = true
+    }
+
+    spotbugs {
+        sourceSets = [sourceSets.main]
     }
 
     spotbugsMain {
