@@ -7,7 +7,9 @@ import com.assignment.diff.jsoncomparison.exception.NotUpdatableCompleteComparis
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Base rest controller that provides the exception handling and common method support for controllers.
@@ -25,6 +27,7 @@ public abstract class BaseRestController {
     private static final String ERROR = "ERROR";
     private static final String DEFAULT_ERROR_MESSAGE = "Internal server error";
     private static final String SUCCESSFULLY_STORED_MESSAGE = "Successfully stored";
+    private static final String INVALID_JSON = "Invalid JSON";
 
     /**
      * Creates successfully stored message.
@@ -55,14 +58,16 @@ public abstract class BaseRestController {
     }
 
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     private JsonResponseMessage<String> handleException(Exception e) {
         LOGGER.error("Internal error occurred.", e);
         return new JsonResponseMessage<>(ERROR, DEFAULT_ERROR_MESSAGE);
     }
 
     @ExceptionHandler(InvalidJsonException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     private JsonResponseMessage<String> handleException(InvalidJsonException e) {
         LOGGER.error("Invalid data error.", e);
-        return new JsonResponseMessage<>(ERROR, DEFAULT_ERROR_MESSAGE);
+        return new JsonResponseMessage<>(ERROR, INVALID_JSON);
     }
 }

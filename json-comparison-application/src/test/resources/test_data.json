@@ -1,0 +1,189 @@
+{
+  "input" : {
+    "case_1": {
+      "left": {
+        "url": "/v1/diff/1/left",
+        "json": "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbSJ9",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "right": {
+        "url": "/v1/diff/1/right",
+        "json": "eyJwbGVtYXQiIDogImhlYXZlbiIsInNlemUiIDogIjJrbSJ9",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "result": {
+        "url": "/v1/diff/1",
+        "response": {
+          "status": "OK",
+          "content": {
+            "ID": "1",
+            "result": "JSON documents are different",
+            "differences": "[startIndex=4:length=3];[startIndex=23:length=1];[startIndex=31:length=1]"
+          }
+        }
+      }
+    },
+    "case_2_1": {
+      "left": {
+        "url": "/v1/diff/2_1/left",
+        "json": "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbX0=",
+        "response": {
+          "status": "ERROR",
+          "content": "Invalid JSON"
+        }
+      }
+    },
+    "case_2_2": {
+      "right": {
+        "url": "/v1/diff/2_2/right",
+        "json": "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbX0=",
+        "response": {
+          "status": "ERROR",
+          "content": "Invalid JSON"
+        }
+      }
+    },
+    "case_3": {
+      "left": {
+        "url": "/v1/diff/3/left",
+        "json": "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbSJ9",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "right": {
+        "url": "/v1/diff/3/right",
+        "json": "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbSJ9",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "result": {
+        "url": "/v1/diff/3",
+        "response": {
+          "status": "OK",
+          "content": {
+            "ID": "3",
+            "result": "JSON documents are the same"
+          }
+        }
+      }
+    },
+    "case_4_1": {
+      "left": {
+        "url": "/v1/diff/4_1/left",
+        "json": "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbSJ9",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "result": {
+        "url": "/v1/diff/4_1",
+        "response": {
+          "status": "ERROR",
+          "content": "Cannot perform comparison 4_1 as [right] are missing"
+        }
+      }
+    },
+    "case_4_2": {
+      "right": {
+        "url": "/v1/diff/4_2/right",
+        "json": "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbSJ9",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "result": {
+        "url": "/v1/diff/4_2",
+        "response": {
+          "status": "ERROR",
+          "content": "Cannot perform comparison 4_2 as [left] are missing"
+        }
+      }
+    },
+    "case_5": {
+      "left": {
+        "url": "/v1/diff/5/left",
+        "json": "eyJuYW1lIjoiSm9obiIsICJzdXJuYW1lIjoiTGVCbGFuayIsICJhZGRyZXNzIjogeyAic3RyZWV0IjogIjV0aCBBdmVudWUiIH0gfQ==",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "right": {
+        "url": "/v1/diff/5/right",
+        "json": "eyJuYW1lIjoiSm9obiIsICJzdXJuYW1lIjoiQmxhbmsiLCAiYWRkcmVzcyI6IHsgInN0cmVldCI6ICI1dGggQXZlbnVlIiB9IH0=",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "result": {
+        "url": "/v1/diff/5",
+        "response": {
+          "status": "OK",
+          "content": {
+            "ID": "5",
+            "result": "JSON documents have different size"
+          }
+        }
+      }
+    },
+    "case_6": {
+      "result": {
+        "url": "/v1/diff/6",
+        "response": {
+          "status": "ERROR",
+          "content": "No comparison with id [6] found"
+        }
+      }
+    },
+    "case_7": {
+      "left": {
+        "url": "/v1/diff/7/left",
+        "json": "eyJwbGFuZXQiIDogImhlYXZlbiIsInNpemUiIDogIjFrbSJ9",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "right": {
+        "url": "/v1/diff/7/right",
+        "json": "eyJwbGVtYXQiIDogImhlYXZlbiIsInNlemUiIDogIjJrbSJ9",
+        "response": {
+          "status": "OK",
+          "content": "Successfully stored"
+        }
+      },
+      "result": {
+        "url": "/v1/diff/7",
+        "response": {
+          "status": "OK",
+          "content": {
+            "ID": "7",
+            "result": "JSON documents are different",
+            "differences": "[startIndex=4:length=3];[startIndex=23:length=1];[startIndex=31:length=1]"
+          }
+        }
+      },
+      "right_reupload": {
+        "url": "/v1/diff/7/right",
+        "json": "eyJwbGVtYXQiIDogImhlYXZlbiIsInNlemUiIDogIjJrbSJ9",
+        "response": {
+          "status": "ERROR",
+          "content": "Cannot update completed comparison with id [7]"
+        }
+      }
+    }
+  }
+}

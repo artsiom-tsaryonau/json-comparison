@@ -1,4 +1,4 @@
 dependencies {
     implementation project(':json-comparison-domain')
-    implementation project(':json-comparison-service')
+    implementation project(':json-comparison-service') 
 }
