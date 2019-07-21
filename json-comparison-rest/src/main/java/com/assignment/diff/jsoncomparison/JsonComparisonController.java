@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * Rest controller for JSON comparison.
  * <p/>
@@ -22,8 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Artsiom Tsaryonau
  */
 @RestController
+@Api("/")
 public class JsonComparisonController extends BaseRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonComparisonController.class);
+
+    private static final int OK_CODE = 200;
+    private static final int ERROR_CODE = 400;
 
     private final IJsonComparisonStoringService storingService;
     private final IJsonComparisonResultService comparisonService;
@@ -47,8 +57,18 @@ public class JsonComparisonController extends BaseRestController {
      * @return result of uploading (usually OK message)
      */
     @PostMapping(value = "/v1/diff/{id}/left")
-    public JsonResponseMessage<String> uploadLeftSide(@PathVariable("id") String comparisonId,
-                                                      @RequestBody String payload) {
+    @ApiOperation(
+        value = "Upload left comparison side",
+        response = JsonResponseMessage.class)
+    @ApiResponses({
+        @ApiResponse(code = OK_CODE, message = "OK", response = JsonResponseMessage.class),
+        @ApiResponse(code = ERROR_CODE, message = "ERROR", response = JsonResponseMessage.class),
+    })
+    public JsonResponseMessage<String> uploadLeftSide(
+            @ApiParam(required = true, name = "id", value = "comparison identifier")
+            @PathVariable("id") String comparisonId,
+            @ApiParam(required = true, name = "payload", value = "data to compare")
+            @RequestBody String payload) {
         LOGGER.info("Updating left side of comparison {}.", comparisonId);
         storingService.updateOrCreateLeftSide(comparisonId, payload);
         return createSuccessfullyStoredMessage();
@@ -61,8 +81,18 @@ public class JsonComparisonController extends BaseRestController {
      * @return result of uploading (usually OK message)
      */
     @PostMapping(value = "/v1/diff/{id}/right")
-    public JsonResponseMessage<String> uploadRightSide(@PathVariable("id") String comparisonId,
-                                                       @RequestBody String payload) {
+    @ApiOperation(
+        value = "Upload right comparison side",
+        response = JsonResponseMessage.class)
+    @ApiResponses({
+        @ApiResponse(code = OK_CODE, message = "OK", response = JsonResponseMessage.class),
+        @ApiResponse(code = ERROR_CODE, message = "ERROR", response = JsonResponseMessage.class)
+    })
+    public JsonResponseMessage<String> uploadRightSide(
+            @ApiParam(required = true, name = "id", value = "comparison identifier")
+            @PathVariable("id") String comparisonId,
+            @ApiParam(required = true, name = "payload", value = "data to compare")
+            @RequestBody String payload) {
         LOGGER.info("Updating right side of comparison {}.", comparisonId);
         storingService.updateOrCreateRightSide(comparisonId, payload);
         return createSuccessfullyStoredMessage();
@@ -74,8 +104,17 @@ public class JsonComparisonController extends BaseRestController {
      * @return comparison result (or info about it not being completed)
      */
     @GetMapping("/v1/diff/{id}")
+    @ApiOperation(
+        value = "Returns comparison result",
+        notes = "Returns existing comparison result or performs comparison if it's not done",
+        response = JsonResponseMessage.class)
+    @ApiResponses({
+        @ApiResponse(code = OK_CODE, message = "OK", response = JsonResponseMessage.class),
+        @ApiResponse(code = ERROR_CODE, message = "ERROR", response = JsonResponseMessage.class)
+    })
     public JsonResponseMessage<JsonComparisonResultMessage> checkComparisonResult(
-        @PathVariable("id") String comparisonId) {
+            @ApiParam(required = true, name = "id", value = "comparison identifier")
+            @PathVariable("id") String comparisonId) {
         LOGGER.info("Retrieving comparison result {}.", comparisonId);
         JsonComparisonResult result = comparisonService.getOrPerformComparison(comparisonId);
         JsonComparisonResultMessage comparisonMessage = new JsonComparisonResultMessage(comparisonId,

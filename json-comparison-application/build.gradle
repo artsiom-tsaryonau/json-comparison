@@ -5,6 +5,6 @@ plugins {
 dependencies {
     implementation project(':json-comparison-domain')
     implementation project(':json-comparison-rest')
-
+    
     testIntegImplementation "io.rest-assured:rest-assured:$restAssuredVersion"
 }
