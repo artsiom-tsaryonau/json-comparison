@@ -24,6 +24,8 @@ import io.restassured.RestAssured;
 /**
  * Integration tests for {@link JsonComparisonController}.
  *
+ * The tests look similar to test automation scenarios without using JBehave.
+ *
  * <p/>
  * Copyright (C) 2019
  * <p/>
@@ -287,6 +289,23 @@ public class JsonComparisonApplicationIntegrationTest {
             rightReuploadJson.read("$.status").toString());
         assertEquals(testData.read("$.input.case_6.right_reupload.response.content").toString(),
             rightReuploadJson.read("$.content"));
+    }
+
+    @Test
+    public void testCase7InternalError() {
+        String leftResponse = given()
+            .post(testData.read("$.input.case_7.left.url").toString())
+            .then()
+            .statusCode(testData.read("$.input.case_7.left.response.code", int.class))
+            .extract()
+            .response()
+            .asString();
+        DocumentContext jsonResponse = JsonPath.parse(leftResponse);
+        assertEquals(testData.read("$.input.case_7.left.response.status").toString(),
+            jsonResponse.read("$.status").toString());
+        assertEquals(testData.read("$.input.case_7.left.response.content").toString(),
+            jsonResponse.read("$.content"));
+
     }
 
     private void assertBasicResponse(String keyStatus, String keyContent, String response) {

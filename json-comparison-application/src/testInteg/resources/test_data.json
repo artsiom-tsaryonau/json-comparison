@@ -182,6 +182,17 @@
           "content": "Cannot update completed comparison with id [6]"
         }
       }
+    },
+    "case_7": {
+      "left": {
+        "url": "/v1/diff/7/left",
+        "response": {
+          "code": 500,
+          "status": "ERROR",
+          "content": "Internal server error"
+        }
+      }
     }
   }
 }
+
