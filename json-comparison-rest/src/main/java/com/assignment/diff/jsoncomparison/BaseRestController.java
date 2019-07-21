@@ -50,6 +50,7 @@ public abstract class BaseRestController {
         NotCompletedComparisonException.class,
         NotUpdatableCompleteComparisonException.class
     })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     private JsonResponseMessage<String> handleServiceException(Exception e) {
         LOGGER.error("Business error occurred.", e);
         return new JsonResponseMessage<>(ERROR, e.getMessage());

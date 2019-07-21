@@ -59,7 +59,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_1.left.json").toString())
             .post(testData.read("$.input.case_1.left.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_1.left.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -69,7 +69,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_1.right.json").toString())
             .post(testData.read("$.input.case_1.right.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_1.right.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -78,7 +78,7 @@ public class JsonComparisonApplicationIntegrationTest {
         String comparisonResult = given()
             .get(testData.read("$.input.case_1.result.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_1.result.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -99,7 +99,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_2.left.json").toString())
             .post(testData.read("$.input.case_2.left.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_2.left.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -109,7 +109,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_2.right.json").toString())
             .post(testData.read("$.input.case_2.right.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_2.right.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -118,7 +118,7 @@ public class JsonComparisonApplicationIntegrationTest {
         String comparisonResult = given()
             .get(testData.read("$.input.case_2.result.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_2.result.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -137,7 +137,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_3_1.left.json").toString())
             .post(testData.read("$.input.case_3_1.left.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_3_1.left.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -146,7 +146,7 @@ public class JsonComparisonApplicationIntegrationTest {
         String response = given()
             .get(testData.read("$.input.case_3_1.result.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_3_1.result.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -162,7 +162,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_3_2.right.json").toString())
             .post(testData.read("$.input.case_3_2.right.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_3_2.right.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -171,7 +171,7 @@ public class JsonComparisonApplicationIntegrationTest {
         String response = given()
             .get(testData.read("$.input.case_3_2.result.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_3_2.result.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -187,7 +187,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_4.left.json").toString())
             .post(testData.read("$.input.case_4.left.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_4.left.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -197,7 +197,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_4.right.json").toString())
             .post(testData.read("$.input.case_4.right.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_4.right.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -206,7 +206,7 @@ public class JsonComparisonApplicationIntegrationTest {
         String comparisonResult = given()
             .get(testData.read("$.input.case_4.result.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_4.result.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -224,7 +224,7 @@ public class JsonComparisonApplicationIntegrationTest {
         String comparisonResult = given()
             .get(testData.read("$.input.case_5.result.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_5.result.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -242,7 +242,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_6.left.json").toString())
             .post(testData.read("$.input.case_6.left.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_6.left.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -252,7 +252,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_6.right.json").toString())
             .post(testData.read("$.input.case_6.right.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_6.right.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -261,7 +261,7 @@ public class JsonComparisonApplicationIntegrationTest {
         String comparisonResult = given()
             .get(testData.read("$.input.case_6.result.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_6.result.response.code", int.class))
             .extract()
             .response()
             .asString();
@@ -278,7 +278,7 @@ public class JsonComparisonApplicationIntegrationTest {
             .body(testData.read("$.input.case_6.right_reupload.json").toString())
             .post(testData.read("$.input.case_6.right_reupload.url").toString())
             .then()
-            .statusCode(200)
+            .statusCode(testData.read("$.input.case_6.right_reupload.response.code", int.class))
             .extract()
             .response()
             .asString();
