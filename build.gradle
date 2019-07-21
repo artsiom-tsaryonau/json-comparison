@@ -19,7 +19,7 @@ subprojects {
 
     group = 'com.assignment.diff.jsoncomparison'
     version = '0.0.1-SNAPSHOT'
-    
+
     apply plugin: 'java-library'
 
     repositories {
@@ -52,6 +52,14 @@ subprojects {
     }
 
     check.dependsOn testInteg
+
+    jacocoTestReport {
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect{
+                fileTree(dir: it, exclude: '**/dto/**')
+            }))
+        }
+    }
 
     dependencies {
         implementation "org.apache.commons:commons-lang3:$commonsLangVersion"

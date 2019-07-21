@@ -2,6 +2,8 @@ package com.assignment.diff.jsoncomparison;
 
 import com.assignment.diff.jsoncomparison.api.IJsonComparisonResultService;
 import com.assignment.diff.jsoncomparison.api.IJsonComparisonStoringService;
+import com.assignment.diff.jsoncomparison.dto.JsonComparisonResultMessage;
+import com.assignment.diff.jsoncomparison.dto.JsonResponseMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

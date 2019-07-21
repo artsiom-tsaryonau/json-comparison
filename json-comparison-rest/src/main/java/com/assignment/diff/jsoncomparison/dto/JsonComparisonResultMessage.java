@@ -1,4 +1,4 @@
-package com.assignment.diff.jsoncomparison;
+package com.assignment.diff.jsoncomparison.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

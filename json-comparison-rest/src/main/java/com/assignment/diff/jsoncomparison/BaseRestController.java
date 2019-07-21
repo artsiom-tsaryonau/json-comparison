@@ -1,5 +1,7 @@
 package com.assignment.diff.jsoncomparison;
 
+import com.assignment.diff.jsoncomparison.dto.JsonComparisonResultMessage;
+import com.assignment.diff.jsoncomparison.dto.JsonResponseMessage;
 import com.assignment.diff.jsoncomparison.exception.NoComparisonFoundException;
 import com.assignment.diff.jsoncomparison.exception.NotCompletedComparisonException;
 import com.assignment.diff.jsoncomparison.exception.NotUpdatableCompleteComparisonException;
