@@ -4,16 +4,17 @@ ifdef::env-github[]
 endif::[]
 
 == Description
-The application performs the comparison of two `base64` encoded JSON strings and returns the differences between them.
+The application performs the comparison of two binary `base64` encoded JSON strings and returns the differences between them.
 
 == Workflow
-Comparison consists of `left` part of comparison and `right` side of comparison. The algorithm of performing the comparison
-in the applicaiton looks like this
+The algorithm of performing the comparison using the application looks like this
 
-* user uploads left side of comparison and the right side of the comparison using `POST` request
-* user asks the application for the comparison result using `GET` request and the  application performs comparison of `left` and `right`
-side character by character and returns the result in JSON format
-* result represents the decision of the application regarding two strings.
+* user uploads left side of comparison and the right side of the comparison using `POST` requests
+* user asks the application for the comparison result using `GET` requesta
+* application performs comparison of `left` and `right` side character by character and returns the result in JSON format
+* result represents the decision of the application regarding two strings
+
+IMPORTANT: Comparison consists of the `left` side of comparison and the `right` side of comparison.
 
 There are several possible decisions
 
@@ -27,7 +28,7 @@ There are several possible decisions
 |===
 
 === Example
-Let's say we want to compare two strings using the application.
+Let's say we want to compare two strings that look like this
 
 .Example data
 [%header, cols="1d, 3a"]
@@ -36,12 +37,12 @@ Let's say we want to compare two strings using the application.
 | Left side   | eyJuYW1lIjoic3VybmFtZSJ9
 | Right side  | eyJuYW1lIjoic3VybmVtZSJ9
 |===
-The result of comparison will look like this
+The result of the comparison will look like this
 ----
 {
   "status": "OK",
   "content": {
-    "ID": "1",
+    "ID": "MY_ID",
     "result": "JSON binary data is different",
     "differences": "[startIndex=18:length=1]"
   }
@@ -64,7 +65,7 @@ The only difference is a single symbol
 eyJuYW1lIjoic3Vybm|F|tZSJ9
 eyJuYW1lIjoic3Vybm|V|tZSJ9
 ----
-So the difference starts at index `18` (0-based indexing) and has `length = 1`. And the `result` JSON provides information about that.
+That difference starts at index `18` (0-based indexing) and has `length = 1`. And the `result` JSON provides information about that.
 ====
 
 == API
@@ -89,13 +90,13 @@ The core of the application is three endpoints
 |===
 
 === Uploading comparison data
-REST expects the body contains the base64 encoded string (or any string other string).
+REST expects the body containing the base64 encoded string (or any string other string).
 
 [TIP]
 ====
 The <ID> can have any value. In case not existing <ID> in `POST` requests the application will create it
 ====
-Both `POST` endpoints provide same responses. In case of success the response looks like this
+Both `POST` endpoints provide the same responses. In case of success the response looks like this
 ----
 {
     "status": "OK",
@@ -110,7 +111,7 @@ Both `POST` endpoints provide same responses. In case of success the response lo
 ----
 {
     "status": "ERROR",
-    "content": "Cannot update completed comparison with id [6]"
+    "content": "Cannot update completed comparison with id [<ID>]"
 }
 ----
 .Not specified internal error
