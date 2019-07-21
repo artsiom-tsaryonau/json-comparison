@@ -5,6 +5,14 @@ plugins {
 dependencies {
     implementation project(':json-comparison-domain')
     implementation project(':json-comparison-rest')
-    
+
     testIntegImplementation "io.rest-assured:rest-assured:$restAssuredVersion"
+}
+
+if (!project.hasProperty("port")) {
+    ext.port = 8080
+}
+
+bootRun {
+    args += ["--server.port=$project.port"]
 }

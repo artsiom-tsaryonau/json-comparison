@@ -1,0 +1,201 @@
+ifdef::env-github[]
+:important-caption: :heavy_exclamation_mark:
+:tip-caption: :bulb:
+endif::[]
+
+== Description
+The application performs the comparison of two `base64` encoded JSON strings and returns the differences between them.
+
+== Workflow
+Comparison consists of `left` part of comparison and `right` side of comparison. The algorithm of performing the comparison
+in the applicaiton looks like this
+
+* user uploads left side of comparison and the right side of the comparison using `POST` request
+* user asks the application for the comparison result using `GET` request and the  application performs comparison of `left` and `right`
+side character by character and returns the result in JSON format
+* result represents the decision of the application regarding two strings.
+
+There are several possible decisions
+
+.Possible decisions
+|===
+| Message
+
+| JSON binary data is different
+| JSON binary data has different size
+| JSON binary data is the same
+|===
+
+=== Example
+Let's say we want to compare two strings using the application.
+
+.Example data
+[%header, cols="1d, 3a"]
+|===
+| Comparison  | Data
+| Left side   | eyJuYW1lIjoic3VybmFtZSJ9
+| Right side  | eyJuYW1lIjoic3VybmVtZSJ9
+|===
+The result of comparison will look like this
+----
+{
+  "status": "OK",
+  "content": {
+    "ID": "1",
+    "result": "JSON binary data is different",
+    "differences": "[startIndex=18:length=1]"
+  }
+}
+----
+
+====
+*Explanation*
+
+Between
+----
+eyJuYW1lIjoic3VybmFtZSJ9
+----
+and
+----
+eyJuYW1lIjoic3VybmVtZSJ9
+----
+The only difference is a single symbol
+----
+eyJuYW1lIjoic3Vybm|F|tZSJ9
+eyJuYW1lIjoic3Vybm|V|tZSJ9
+----
+So the difference starts at index `18` (0-based indexing) and has `length = 1`. And the `result` JSON provides information about that.
+====
+
+== API
+The core of the application is three endpoints
+
+.Endpoints
+[cols="2d, 1a, 3d"]
+|===
+| Endpoint | Method | Description
+
+| /v1/diff/<ID>/left
+| POST
+| Uploads left side of comparison
+
+| /v1/diff/<ID>/right
+| POST
+| Uploads right side of comparison
+
+| /v1/diff/<ID>
+| GET
+| Returns comparison result
+|===
+
+=== Uploading comparison data
+REST expects the body contains the base64 encoded string (or any string other string).
+
+[TIP]
+====
+The <ID> can have any value. In case not existing <ID> in `POST` requests the application will create it
+====
+Both `POST` endpoints provide same responses. In case of success the response looks like this
+----
+{
+    "status": "OK",
+    "content": "Successfully stored"
+}
+----
+
+====
+*There are several error responses*
+
+.Attempt to update finished comparison
+----
+{
+    "status": "ERROR",
+    "content": "Cannot update completed comparison with id [6]"
+}
+----
+.Not specified internal error
+----
+{
+    "status": "ERROR",
+    "content": "Internal server error"
+}
+----
+====
+
+=== Retrieving results
+All responses from `GET` endpoint have similar structure. They are either look like this
+----
+{
+  "status": "<STATUS_CODE>",
+  "content": {
+    "ID": "<ID>",
+    "result": "<DECISION>"
+  }
+}
+----
+or like this
+----
+{
+  "status": "<STATUS_CODE>",
+  "content": {
+    "ID": "<ID>",
+    "result": "<DECISION>",
+    "differences": "<INDEX_OFFSET>"
+  }
+}
+----
+IMPORTANT: response field `differences` is available only for the decision `JSON binary data is different`.
+
+====
+*There are several error responses*
+
+.No comparison found by id
+----
+{
+    "status": "ERROR",
+    "content": "No comparison with id [<ID>] found"
+}
+----
+.When some of sides are missing
+----
+{
+    "status": "ERROR",
+    "content": "Cannot perform comparison <ID> as [<side>] are missing"
+}
+----
+.Not specified internal error
+----
+{
+    "status": "ERROR",
+    "content": "Internal server error"
+}
+----
+====
+
+== How to Run
+=== For Windows
+----
+start.bat
+----
+or
+----
+gradlew bootRun
+----
+=== For Linux
+----
+./gradlew bootRun
+----
+By default application is running on `8080` port. You can change it by providing the argument `port` when executing tasks.
+
+==== Example
+----
+gradlew bootRun -Pport=8081
+----
+This will start application on port 8081
+
+== Swagger
+By default application is running on `8080`.
+You can access `swagger` documentation and try REST endpoints by going to
+----
+http://localhost:8080
+----
