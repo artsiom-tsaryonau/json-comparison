@@ -69,7 +69,7 @@ public class JsonComparisonController extends BaseRestController {
     public JsonResponseMessage<String> uploadLeftSide(
             @ApiParam(required = true, name = "id", value = "comparison identifier")
             @PathVariable("id") String comparisonId,
-            @ApiParam(required = true, name = "payload", value = "data to compare")
+            @ApiParam(required = true, name = "payload", value = "data to compare", example = "eyJuYW1lIjoidGVzdCJ9")
             @RequestBody String payload) {
         LOGGER.info("Updating left side of comparison {}.", comparisonId);
         storingService.updateOrCreateLeftSide(comparisonId, payload);
@@ -93,7 +93,7 @@ public class JsonComparisonController extends BaseRestController {
     public JsonResponseMessage<String> uploadRightSide(
             @ApiParam(required = true, name = "id", value = "comparison identifier")
             @PathVariable("id") String comparisonId,
-            @ApiParam(required = true, name = "payload", value = "data to compare")
+            @ApiParam(required = true, name = "payload", value = "data to compare", example = "eyJuYW1lIjoidGVzdCJ9")
             @RequestBody String payload) {
         LOGGER.info("Updating right side of comparison {}.", comparisonId);
         storingService.updateOrCreateRightSide(comparisonId, payload);
