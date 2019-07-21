@@ -15,8 +15,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @param <T> content type in the message
  */
 public class JsonResponseMessage<T> {
-    private String status;
-    private T content;
+    private final String status;
+    private final T content;
 
     /**
      * Constructor.
