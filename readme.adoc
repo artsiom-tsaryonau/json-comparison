@@ -6,6 +6,8 @@ endif::[]
 == Description
 The application performs the comparison of two binary `base64` encoded JSON strings and returns the differences between them.
 
+IMPORTANT: As original requirements directly mention JSON, the naming in the project relies on JsonXXXX.
+
 == Workflow
 The algorithm of performing the comparison using the application looks like this
 
