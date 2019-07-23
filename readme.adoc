@@ -196,8 +196,20 @@ gradlew bootRun -Pport=8081
 ----
 This will start application on port 8081
 
+=== Database
+Application uses in-memory H2 database.
+You can access it by going to
+----
+http://localhost:8080/h2-console
+----
+And setting JDBC URL to
+----
+jdbc:h2:mem:testdb
+----
+IMPORTANT: if you changed application port, then H2 will be available on the changed port
+
 == Swagger
-By default application is running on `8080`.
+By default application is running on `8080`
 You can access `swagger` documentation and try REST endpoints by going to
 ----
 http://localhost:8080

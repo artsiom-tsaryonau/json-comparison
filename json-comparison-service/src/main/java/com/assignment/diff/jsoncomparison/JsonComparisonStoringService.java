@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.function.Consumer;
+
 /**
  * Implementation of {@link IJsonComparisonStoringService}.
  * <p/>
@@ -35,30 +37,19 @@ public class JsonComparisonStoringService implements IJsonComparisonStoringServi
 
     @Override
     public void updateOrCreateLeftSide(String comparisonId, String json) {
-        if (repository.existsById(comparisonId)) {
-            JsonComparisonResult stored = repository.getOne(comparisonId);
-            if (ComparisonDecision.NONE == stored.getDecision()) {
-                stored.setLeftSide(json);
-                repository.save(stored);
-            } else {
-                throw new NotUpdatableCompleteComparisonException(comparisonId);
-            }
-        } else {
-            LOGGER.info("No comparison found with {}. Creating new.", comparisonId);
-            JsonComparisonResult newResult = new JsonComparisonResult();
-            newResult.setDecision(ComparisonDecision.NONE);
-            newResult.setComparisonId(comparisonId);
-            newResult.setLeftSide(json);
-            repository.save(newResult);
-        }
+        updateComparisonSide(comparisonId, storedComparisonResult -> storedComparisonResult.setLeftSide(json));
     }
 
     @Override
     public void updateOrCreateRightSide(String comparisonId, String json) {
+        updateComparisonSide(comparisonId, storedComparisonResult -> storedComparisonResult.setRightSide(json));
+    }
+
+    private void updateComparisonSide(String comparisonId, Consumer<JsonComparisonResult> updateSide) {
         if (repository.existsById(comparisonId)) {
             JsonComparisonResult stored = repository.getOne(comparisonId);
             if (ComparisonDecision.NONE == stored.getDecision()) {
-                stored.setRightSide(json);
+                updateSide.accept(stored);
                 repository.save(stored);
             } else {
                 throw new NotUpdatableCompleteComparisonException(comparisonId);
@@ -68,7 +59,9 @@ public class JsonComparisonStoringService implements IJsonComparisonStoringServi
             JsonComparisonResult newResult = new JsonComparisonResult();
             newResult.setDecision(ComparisonDecision.NONE);
             newResult.setComparisonId(comparisonId);
-            newResult.setRightSide(json);
+
+            updateSide.accept(newResult);
+
             repository.save(newResult);
         }
     }
