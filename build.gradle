@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:2.0.0"
         classpath "org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:2.1.1"
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
     }
 }
 
@@ -16,6 +17,7 @@ subprojects {
     apply plugin: 'pmd'
     apply plugin: 'com.github.spotbugs'
     apply plugin: "org.unbroken-dome.test-sets"
+    apply plugin: "info.solidsoft.pitest"
 
     group = 'com.assignment.diff.jsoncomparison'
     version = '0.0.1-SNAPSHOT'
@@ -49,6 +51,21 @@ subprojects {
 
     testSets {
         testInteg
+    }
+
+    pitest {
+        targetClasses = ['com.assignment.diff.jsoncomparison.*']
+        pitestVersion = '1.4.9'
+        threads = 6
+        outputFormats = ['HTML']
+        
+        if (project.name in [
+                'json-comparison-application',
+                'json-comparison-domain',
+                'json-comparison-repository'
+        ]) {
+            failWhenNoMutations = false
+        }
     }
 
     jacocoTestReport {
