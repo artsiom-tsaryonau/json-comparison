@@ -3,7 +3,6 @@ package com.assignment.diff.jsoncomparison.util;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -30,14 +29,14 @@ public final class StringComparisonUtils {
      * @return string with differences
      */
     public static String plainDiff(String left, String right) {
-        List<Pair<Integer, Integer>> differences = new ArrayList<>();
+        var differences = new ArrayList<Pair<Integer, Integer>>();
         int length = 0;
         int index = 0;
         int startIndex = -1;
 
         while (true) {
-            char leftChar = left.charAt(index);
-            char rightChar = right.charAt(index);
+            var leftChar = left.charAt(index);
+            var rightChar = right.charAt(index);
 
             if (leftChar != rightChar) {
                 if (startIndex == -1) {

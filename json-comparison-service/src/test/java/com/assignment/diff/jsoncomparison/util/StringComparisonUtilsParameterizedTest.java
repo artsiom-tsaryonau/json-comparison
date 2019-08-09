@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Parameterized tests for {@link StringComparisonUtils} that tests json comparison.
@@ -23,7 +23,7 @@ import java.util.Collection;
 public class StringComparisonUtilsParameterizedTest {
     @Parameters
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
+        return List.of(new Object[][]{
             {"lefth", "right", "[startIndex=0:length=5]"},
             {"glory of rome", "glory of home", "[startIndex=9:length=1]"},
             {"glory of rome, glorious home", "glory of home, gloriaac rome",

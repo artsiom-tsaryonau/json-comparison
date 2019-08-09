@@ -119,8 +119,8 @@ public class JsonComparisonController extends BaseRestController {
             @PathVariable("id") String comparisonId) {
         LOGGER.info("Retrieving comparison result {}.", comparisonId);
         JsonComparisonResult result = comparisonService.getOrPerformComparison(comparisonId);
-        JsonComparisonResultMessage comparisonMessage = new JsonComparisonResultMessage(comparisonId,
-            result.getDecision().getMessage(), result.getDifferences());
+        var comparisonMessage = new JsonComparisonResultMessage(comparisonId, result.getDecision().getMessage(),
+            result.getDifferences());
         return createComparisonResultMessage(comparisonMessage);
     }
 }

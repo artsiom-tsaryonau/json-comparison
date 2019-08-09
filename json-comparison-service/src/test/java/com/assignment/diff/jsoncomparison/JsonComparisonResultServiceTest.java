@@ -58,7 +58,7 @@ public class JsonComparisonResultServiceTest {
 
     @Test
     public void testGetOrPerformComparisonWhenDifferentLength() {
-        JsonComparisonResult updated = createJsonComparisonResult(ComparisonDecision.DIFFERENT_SIZE, JSON_1, JSON_2);
+        var updated = createJsonComparisonResult(ComparisonDecision.DIFFERENT_SIZE, JSON_1, JSON_2);
         expect(repository.existsById(COMPARISON_ID)).andReturn(true);
         expect(repository.getOne(COMPARISON_ID))
             .andReturn(createJsonComparisonResult(ComparisonDecision.NONE, JSON_1, JSON_2));
@@ -70,7 +70,7 @@ public class JsonComparisonResultServiceTest {
 
     @Test
     public void testGetOrPerformComparisonWhenSameLength() {
-        JsonComparisonResult updated = createJsonComparisonResult(ComparisonDecision.DIFFERENT, JSON_1, JSON_3,
+        var updated = createJsonComparisonResult(ComparisonDecision.DIFFERENT, JSON_1, JSON_3,
             JSON_3_1_DIFF);
         expect(repository.existsById(COMPARISON_ID)).andReturn(true);
         expect(repository.getOne(COMPARISON_ID))
@@ -83,7 +83,7 @@ public class JsonComparisonResultServiceTest {
 
     @Test
     public void testGetOrPerformComparisonWhenSameLengthAndSameValue() {
-        JsonComparisonResult updated = createJsonComparisonResult(ComparisonDecision.SAME, JSON_1, JSON_1);
+        var updated = createJsonComparisonResult(ComparisonDecision.SAME, JSON_1, JSON_1);
         expect(repository.existsById(COMPARISON_ID)).andReturn(true);
         expect(repository.getOne(COMPARISON_ID))
             .andReturn(createJsonComparisonResult(ComparisonDecision.NONE, JSON_1, JSON_1));
@@ -94,21 +94,21 @@ public class JsonComparisonResultServiceTest {
     }
 
     private JsonComparisonResult createJsonComparisonResult() {
-        JsonComparisonResult comparisonResult = new JsonComparisonResult();
+        var comparisonResult = new JsonComparisonResult();
         comparisonResult.setDecision(ComparisonDecision.NONE);
         comparisonResult.setComparisonId(COMPARISON_ID);
         return comparisonResult;
     }
 
     private JsonComparisonResult createJsonComparisonResult(ComparisonDecision decision) {
-        JsonComparisonResult comparisonResult = createJsonComparisonResult();
+        var comparisonResult = createJsonComparisonResult();
         comparisonResult.setDecision(decision);
         return comparisonResult;
     }
 
     private JsonComparisonResult createJsonComparisonResult(ComparisonDecision decision, String leftSide,
                                                             String rightSide) {
-        JsonComparisonResult comparisonResult = createJsonComparisonResult(decision);
+        var comparisonResult = createJsonComparisonResult(decision);
         comparisonResult.setLeftSide(leftSide);
         comparisonResult.setRightSide(rightSide);
         return comparisonResult;
@@ -116,7 +116,7 @@ public class JsonComparisonResultServiceTest {
 
     private JsonComparisonResult createJsonComparisonResult(ComparisonDecision decision, String leftSide,
                                                             String rightSide, String differences) {
-        JsonComparisonResult comparisonResult = createJsonComparisonResult(decision, leftSide, rightSide);
+        var comparisonResult = createJsonComparisonResult(decision, leftSide, rightSide);
         comparisonResult.setDifferences(differences);
         return comparisonResult;
     }

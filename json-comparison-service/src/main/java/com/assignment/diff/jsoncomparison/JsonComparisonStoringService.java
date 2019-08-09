@@ -56,7 +56,7 @@ public class JsonComparisonStoringService implements IJsonComparisonStoringServi
             }
         } else {
             LOGGER.info("No comparison found with {}. Creating new.", comparisonId);
-            JsonComparisonResult newResult = new JsonComparisonResult();
+            var newResult = new JsonComparisonResult();
             newResult.setDecision(ComparisonDecision.NONE);
             newResult.setComparisonId(comparisonId);
 

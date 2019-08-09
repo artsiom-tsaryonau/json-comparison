@@ -73,7 +73,7 @@ public class JsonComparisonControllerTest {
     }
 
     private JsonComparisonResult createSameComparisonResult() {
-        JsonComparisonResult comparisonResult = new JsonComparisonResult();
+        var comparisonResult = new JsonComparisonResult();
         comparisonResult.setDecision(ComparisonDecision.SAME);
         comparisonResult.setComparisonId(COMPARISON_ID);
         return comparisonResult;

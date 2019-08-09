@@ -45,7 +45,7 @@ public class JsonComparisonApplicationIntegrationTest {
 
     @BeforeClass
     public static void init() throws Exception {
-        String data = new String(Files.readAllBytes(
+        var data = new String(Files.readAllBytes(
             Paths.get(ClassLoader.getSystemResource("test_data.json").toURI())));
         testData = JsonPath.parse(data);
     }

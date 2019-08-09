@@ -35,7 +35,7 @@ public class JsonComparisonStoringServiceTest {
 
     @Test
     public void testUpdateOrCreateLeftSideWhenExist() {
-        JsonComparisonResult updated = createJsonComparisonResult(ComparisonDecision.NONE, JSON, null);
+        var updated = createJsonComparisonResult(ComparisonDecision.NONE, JSON, null);
         expect(repository.existsById(COMPARISON_ID)).andReturn(true);
         expect(repository.getOne(COMPARISON_ID)).andReturn(createJsonComparisonResult(ComparisonDecision.NONE));
         expect(repository.save(updated)).andReturn(updated);
@@ -46,7 +46,7 @@ public class JsonComparisonStoringServiceTest {
 
     @Test
     public void testUpdateOrCreateLeftSideWhenNotExist() {
-        JsonComparisonResult updated = createJsonComparisonResult(ComparisonDecision.NONE, JSON, null);
+        var updated = createJsonComparisonResult(ComparisonDecision.NONE, JSON, null);
         expect(repository.existsById(COMPARISON_ID)).andReturn(false);
         expect(repository.save(createJsonComparisonResult(ComparisonDecision.NONE, JSON, null))).andReturn(updated);
         replay(repository);
@@ -56,7 +56,7 @@ public class JsonComparisonStoringServiceTest {
 
     @Test
     public void testUpdateOrCreateRightSideWhenExist() {
-        JsonComparisonResult updated = createJsonComparisonResult(ComparisonDecision.NONE, null, JSON);
+        var updated = createJsonComparisonResult(ComparisonDecision.NONE, null, JSON);
         expect(repository.existsById(COMPARISON_ID)).andReturn(true);
         expect(repository.getOne(COMPARISON_ID)).andReturn(createJsonComparisonResult(ComparisonDecision.NONE));
         expect(repository.save(updated)).andReturn(updated);
@@ -67,7 +67,7 @@ public class JsonComparisonStoringServiceTest {
 
     @Test
     public void testUpdateOrCreateRightSideWhenNotExist() {
-        JsonComparisonResult updated = createJsonComparisonResult(ComparisonDecision.NONE, null, JSON);
+        var updated = createJsonComparisonResult(ComparisonDecision.NONE, null, JSON);
         expect(repository.existsById(COMPARISON_ID)).andReturn(false);
         expect(repository.save(createJsonComparisonResult(ComparisonDecision.NONE, null, JSON))).andReturn(updated);
         replay(repository);
@@ -94,7 +94,7 @@ public class JsonComparisonStoringServiceTest {
     }
 
     private JsonComparisonResult createJsonComparisonResult(ComparisonDecision decision) {
-        JsonComparisonResult result = new JsonComparisonResult();
+        var result = new JsonComparisonResult();
         result.setComparisonId(COMPARISON_ID);
         result.setDecision(decision);
         return result;
@@ -102,7 +102,7 @@ public class JsonComparisonStoringServiceTest {
 
     private JsonComparisonResult createJsonComparisonResult(ComparisonDecision decision, String leftSide,
                                                             String rightSide) {
-        JsonComparisonResult result = createJsonComparisonResult(decision);
+        var result = createJsonComparisonResult(decision);
         result.setLeftSide(leftSide);
         result.setRightSide(rightSide);
         return result;
