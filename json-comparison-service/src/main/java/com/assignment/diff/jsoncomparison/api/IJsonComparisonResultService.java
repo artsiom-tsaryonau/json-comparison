@@ -1,6 +1,7 @@
 package com.assignment.diff.jsoncomparison.api;
 
 import com.assignment.diff.jsoncomparison.JsonComparisonResult;
+import reactor.core.publisher.Mono;
 
 /**
  * Service for comparison of JSON.
@@ -22,5 +23,5 @@ public interface IJsonComparisonResultService {
      * @param comparisonId comparison id
      * @return comparison result
      */
-    JsonComparisonResult getOrPerformComparison(String comparisonId);
+    Mono<JsonComparisonResult> getOrPerformComparison(String comparisonId);
 }

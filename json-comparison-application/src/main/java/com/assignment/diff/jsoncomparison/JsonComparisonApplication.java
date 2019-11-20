@@ -2,9 +2,13 @@ package com.assignment.diff.jsoncomparison;
 
 import com.google.common.base.Predicates;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.r2dbc.core.DatabaseClient;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -13,6 +17,9 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 @EnableSwagger2
 @SpringBootApplication
@@ -53,4 +60,23 @@ public class JsonComparisonApplication {
         };
     }
 
+    /**
+     * Instantiates database.
+     * @param client client
+     * @return command line runner
+     */
+    @Bean
+    public CommandLineRunner startup(DatabaseClient client) {
+        return (args) -> client
+            .execute(() -> {
+                var resource = new ClassPathResource("ddl/script.sql");
+                try (var is = new InputStreamReader(resource.getInputStream())) {
+                    return FileCopyUtils.copyToString(is);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            })
+            .then()
+            .block();
+    }
 }

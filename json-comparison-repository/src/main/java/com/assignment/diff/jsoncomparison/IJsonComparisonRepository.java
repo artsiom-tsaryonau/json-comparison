@@ -1,6 +1,6 @@
 package com.assignment.diff.jsoncomparison;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 /**
  * Repository for storing JSON comparison data.
@@ -11,5 +11,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Artsiom Tsaryonau
  */
-public interface IJsonComparisonRepository extends JpaRepository<JsonComparisonResult, String> {
+public interface IJsonComparisonRepository extends ReactiveCrudRepository<JsonComparisonResult, String> {
 }

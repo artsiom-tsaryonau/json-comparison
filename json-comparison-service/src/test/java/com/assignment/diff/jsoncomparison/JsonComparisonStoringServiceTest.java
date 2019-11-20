@@ -10,6 +10,8 @@ import com.assignment.diff.jsoncomparison.exception.NotUpdatableCompleteComparis
 
 import org.junit.Before;
 import org.junit.Test;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 /**
  * Tests for {@link JsonComparisonStoringService}.
@@ -36,60 +38,80 @@ public class JsonComparisonStoringServiceTest {
     @Test
     public void testUpdateOrCreateLeftSideWhenExist() {
         var updated = createJsonComparisonResult(ComparisonDecision.NONE, JSON, null);
-        expect(repository.existsById(COMPARISON_ID)).andReturn(true);
-        expect(repository.getOne(COMPARISON_ID)).andReturn(createJsonComparisonResult(ComparisonDecision.NONE));
-        expect(repository.save(updated)).andReturn(updated);
+        expect(repository.findById(COMPARISON_ID))
+            .andReturn(Mono.just(createJsonComparisonResult(ComparisonDecision.NONE)));
+        expect(repository.save(updated)).andReturn(Mono.just(updated));
         replay(repository);
-        storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON);
+        StepVerifier
+            .create(storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON))
+            .expectNext(updated)
+            .verifyComplete();
         verify(repository);
     }
 
     @Test
     public void testUpdateOrCreateLeftSideWhenNotExist() {
         var updated = createJsonComparisonResult(ComparisonDecision.NONE, JSON, null);
-        expect(repository.existsById(COMPARISON_ID)).andReturn(false);
-        expect(repository.save(createJsonComparisonResult(ComparisonDecision.NONE, JSON, null))).andReturn(updated);
+        expect(repository.findById(COMPARISON_ID)).andReturn(Mono.empty());
+        expect(repository.save(createJsonComparisonResult(ComparisonDecision.NONE, JSON, null)))
+            .andReturn(Mono.just(updated));
         replay(repository);
-        storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON);
+        StepVerifier
+            .create(storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON))
+            .expectNext(updated)
+            .verifyComplete();
         verify(repository);
     }
 
     @Test
     public void testUpdateOrCreateRightSideWhenExist() {
         var updated = createJsonComparisonResult(ComparisonDecision.NONE, null, JSON);
-        expect(repository.existsById(COMPARISON_ID)).andReturn(true);
-        expect(repository.getOne(COMPARISON_ID)).andReturn(createJsonComparisonResult(ComparisonDecision.NONE));
-        expect(repository.save(updated)).andReturn(updated);
+        expect(repository.findById(COMPARISON_ID))
+            .andReturn(Mono.just(createJsonComparisonResult(ComparisonDecision.NONE)));
+        expect(repository.save(updated)).andReturn(Mono.just(updated));
         replay(repository);
-        storingService.updateOrCreateRightSide(COMPARISON_ID, JSON);
+        StepVerifier
+            .create(storingService.updateOrCreateRightSide(COMPARISON_ID, JSON))
+            .expectNext(updated)
+            .verifyComplete();
         verify(repository);
     }
 
     @Test
     public void testUpdateOrCreateRightSideWhenNotExist() {
         var updated = createJsonComparisonResult(ComparisonDecision.NONE, null, JSON);
-        expect(repository.existsById(COMPARISON_ID)).andReturn(false);
-        expect(repository.save(createJsonComparisonResult(ComparisonDecision.NONE, null, JSON))).andReturn(updated);
+        expect(repository.findById(COMPARISON_ID)).andReturn(Mono.empty());
+        expect(repository.save(createJsonComparisonResult(ComparisonDecision.NONE, null, JSON)))
+            .andReturn(Mono.just(updated));
         replay(repository);
-        storingService.updateOrCreateRightSide(COMPARISON_ID, JSON);
+        StepVerifier
+            .create(storingService.updateOrCreateRightSide(COMPARISON_ID, JSON))
+            .expectNext(updated)
+            .verifyComplete();
         verify(repository);
     }
 
-    @Test(expected = NotUpdatableCompleteComparisonException.class)
+    @Test
     public void testUpdateOrCreateLeftSideWhenNotUpdatable() {
-        expect(repository.existsById(COMPARISON_ID)).andReturn(true);
-        expect(repository.getOne(COMPARISON_ID)).andReturn(createJsonComparisonResult(ComparisonDecision.SAME));
+        expect(repository.findById(COMPARISON_ID))
+            .andReturn(Mono.just(createJsonComparisonResult(ComparisonDecision.SAME)));
         replay(repository);
-        storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON);
+        StepVerifier
+            .create(storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON))
+            .expectErrorMatches(throwable -> throwable instanceof NotUpdatableCompleteComparisonException)
+            .verify();
         verify(repository);
     }
 
-    @Test(expected = NotUpdatableCompleteComparisonException.class)
+    @Test
     public void testUpdateOrCreateRightSideWhenNotUpdatable() {
-        expect(repository.existsById(COMPARISON_ID)).andReturn(true);
-        expect(repository.getOne(COMPARISON_ID)).andReturn(createJsonComparisonResult(ComparisonDecision.SAME));
+        expect(repository.findById(COMPARISON_ID))
+            .andReturn(Mono.just(createJsonComparisonResult(ComparisonDecision.SAME)));
         replay(repository);
-        storingService.updateOrCreateRightSide(COMPARISON_ID, JSON);
+        StepVerifier
+            .create(storingService.updateOrCreateRightSide(COMPARISON_ID, JSON))
+            .expectErrorMatches(throwable -> throwable instanceof NotUpdatableCompleteComparisonException)
+            .verify();
         verify(repository);
     }
 

@@ -8,8 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Implementation of {@link IJsonComparisonStoringService}.
@@ -36,33 +37,38 @@ public class JsonComparisonStoringService implements IJsonComparisonStoringServi
     }
 
     @Override
-    public void updateOrCreateLeftSide(String comparisonId, String json) {
-        updateComparisonSide(comparisonId, storedComparisonResult -> storedComparisonResult.setLeftSide(json));
+    public Mono<JsonComparisonResult> updateOrCreateLeftSide(String comparisonId, String json) {
+        return updateComparisonSide(comparisonId, storedComparisonResult -> {
+            storedComparisonResult.setLeftSide(json);
+            return storedComparisonResult;
+        });
     }
 
     @Override
-    public void updateOrCreateRightSide(String comparisonId, String json) {
-        updateComparisonSide(comparisonId, storedComparisonResult -> storedComparisonResult.setRightSide(json));
+    public Mono<JsonComparisonResult> updateOrCreateRightSide(String comparisonId, String json) {
+        return updateComparisonSide(comparisonId, storedComparisonResult -> {
+            storedComparisonResult.setRightSide(json);
+            return storedComparisonResult;
+        });
     }
 
-    private void updateComparisonSide(String comparisonId, Consumer<JsonComparisonResult> updateSide) {
-        if (repository.existsById(comparisonId)) {
-            JsonComparisonResult stored = repository.getOne(comparisonId);
-            if (ComparisonDecision.NONE == stored.getDecision()) {
-                updateSide.accept(stored);
-                repository.save(stored);
-            } else {
-                throw new NotUpdatableCompleteComparisonException(comparisonId);
-            }
-        } else {
-            LOGGER.info("No comparison found with {}. Creating new.", comparisonId);
-            var newResult = new JsonComparisonResult();
-            newResult.setDecision(ComparisonDecision.NONE);
-            newResult.setComparisonId(comparisonId);
+    private Mono<JsonComparisonResult> updateComparisonSide(String comparisonId,
+                                                            Function<JsonComparisonResult, JsonComparisonResult> updateSide) {
+        return repository.findById(comparisonId)
+            .defaultIfEmpty(createResult(comparisonId))
+            .filter(result -> ComparisonDecision.NONE == result.getDecision()) // if not NONE - it means it was found and completed
+            .switchIfEmpty(Mono.error(new NotUpdatableCompleteComparisonException(comparisonId)))
+            .map(updateSide)
+            .flatMap(repository::save);
 
-            updateSide.accept(newResult);
+    }
 
-            repository.save(newResult);
-        }
+    private JsonComparisonResult createResult(String comparisonId) {
+        LOGGER.info("Creating new comparison result: {}.", comparisonId);
+        var newResult = new JsonComparisonResult();
+        newResult.setDecision(ComparisonDecision.NONE);
+        newResult.setComparisonId(comparisonId);
+        newResult.setIsNew(true);
+        return newResult;
     }
 }

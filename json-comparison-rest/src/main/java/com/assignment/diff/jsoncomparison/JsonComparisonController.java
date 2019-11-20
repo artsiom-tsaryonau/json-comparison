@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import reactor.core.publisher.Mono;
 
 /**
  * Rest controller for JSON comparison.
@@ -66,14 +67,14 @@ public class JsonComparisonController extends BaseRestController {
         @ApiResponse(code = OK_CODE, message = "OK", response = JsonResponseMessage.class),
         @ApiResponse(code = ERROR_CODE, message = "ERROR", response = JsonResponseMessage.class),
     })
-    public JsonResponseMessage<String> uploadLeftSide(
+    public Mono<JsonResponseMessage<String>> uploadLeftSide(
             @ApiParam(required = true, name = "id", value = "comparison identifier")
             @PathVariable("id") String comparisonId,
             @ApiParam(required = true, name = "payload", value = "data to compare", example = "eyJuYW1lIjoidGVzdCJ9")
             @RequestBody String payload) {
         LOGGER.info("Updating left side of comparison {}.", comparisonId);
-        storingService.updateOrCreateLeftSide(comparisonId, payload);
-        return createSuccessfullyStoredMessage();
+        return storingService.updateOrCreateLeftSide(comparisonId, payload)
+            .map(comparisonResult -> createSuccessfullyStoredMessage());
     }
 
     /**
@@ -90,14 +91,14 @@ public class JsonComparisonController extends BaseRestController {
         @ApiResponse(code = OK_CODE, message = "OK", response = JsonResponseMessage.class),
         @ApiResponse(code = ERROR_CODE, message = "ERROR", response = JsonResponseMessage.class)
     })
-    public JsonResponseMessage<String> uploadRightSide(
+    public Mono<JsonResponseMessage<String>> uploadRightSide(
             @ApiParam(required = true, name = "id", value = "comparison identifier")
             @PathVariable("id") String comparisonId,
             @ApiParam(required = true, name = "payload", value = "data to compare", example = "eyJuYW1lIjoidGVzdCJ9")
             @RequestBody String payload) {
         LOGGER.info("Updating right side of comparison {}.", comparisonId);
-        storingService.updateOrCreateRightSide(comparisonId, payload);
-        return createSuccessfullyStoredMessage();
+        return storingService.updateOrCreateRightSide(comparisonId, payload)
+            .map(jsonComparisonResult -> createSuccessfullyStoredMessage());
     }
 
     /**
@@ -114,13 +115,15 @@ public class JsonComparisonController extends BaseRestController {
         @ApiResponse(code = OK_CODE, message = "OK", response = JsonResponseMessage.class),
         @ApiResponse(code = ERROR_CODE, message = "ERROR", response = JsonResponseMessage.class)
     })
-    public JsonResponseMessage<JsonComparisonResultMessage> checkComparisonResult(
+    public Mono<JsonResponseMessage<JsonComparisonResultMessage>> checkComparisonResult(
             @ApiParam(required = true, name = "id", value = "comparison identifier")
             @PathVariable("id") String comparisonId) {
         LOGGER.info("Retrieving comparison result {}.", comparisonId);
-        JsonComparisonResult result = comparisonService.getOrPerformComparison(comparisonId);
-        var comparisonMessage = new JsonComparisonResultMessage(comparisonId, result.getDecision().getMessage(),
-            result.getDifferences());
-        return createComparisonResultMessage(comparisonMessage);
+        return comparisonService.getOrPerformComparison(comparisonId)
+            .map(comparisonResult -> {
+                var resultMessage = new JsonComparisonResultMessage(comparisonId,
+                    comparisonResult.getDecision().getMessage(), comparisonResult.getDifferences());
+                return createComparisonResultMessage(resultMessage);
+            });
     }
 }

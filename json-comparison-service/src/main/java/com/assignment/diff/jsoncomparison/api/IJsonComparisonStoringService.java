@@ -1,5 +1,8 @@
 package com.assignment.diff.jsoncomparison.api;
 
+import com.assignment.diff.jsoncomparison.JsonComparisonResult;
+import reactor.core.publisher.Mono;
+
 /**
  * Service for storing and reading comparison result.
  * <p/>
@@ -15,11 +18,11 @@ public interface IJsonComparisonStoringService {
      * @param comparisonId comparison id
      * @param json json to store
      */
-    void updateOrCreateLeftSide(String comparisonId, String json);
+    Mono<JsonComparisonResult> updateOrCreateLeftSide(String comparisonId, String json);
     /**
      * Store right side of JSON comparison.
      * @param comparisonId comparison id
      * @param json json to store
      */
-    void updateOrCreateRightSide(String comparisonId, String json);
+    Mono<JsonComparisonResult> updateOrCreateRightSide(String comparisonId, String json);
 }

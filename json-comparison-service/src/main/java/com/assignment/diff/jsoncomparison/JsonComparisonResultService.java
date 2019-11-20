@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,21 +42,17 @@ public class JsonComparisonResultService implements IJsonComparisonResultService
     }
 
     @Override
-    public JsonComparisonResult getOrPerformComparison(String comparisonId) {
-        if (repository.existsById(comparisonId)) {
-            JsonComparisonResult result = repository.getOne(comparisonId);
-            if (ComparisonDecision.NONE == result.getDecision() && isEligibleForComparison(comparisonId, result)) {
-                LOGGER.info("Performing comparison {}.", comparisonId);
-                result = performComparison(result);
-                repository.save(result);
-            }
-            return result;
-        } else {
-            throw new NoComparisonFoundException(comparisonId);
-        }
+    public Mono<JsonComparisonResult> getOrPerformComparison(String comparisonId) {
+        return repository.findById(comparisonId)
+            .switchIfEmpty(Mono.error(new NoComparisonFoundException(comparisonId)))
+            .filter(comparisonResult -> ComparisonDecision.NONE == comparisonResult.getDecision())
+            .filter(comparisonResult -> isEligibleForComparison(comparisonId, comparisonResult))
+            .map(this::performComparison)
+            .flatMap(repository::save);
     }
 
     private JsonComparisonResult performComparison(JsonComparisonResult result) {
+        LOGGER.info("Performing comparison {}.", result.getComparisonId());
         String leftSide = result.getLeftSide();
         String rightSide = result.getRightSide();
         if (leftSide.length() != rightSide.length()) {
@@ -78,7 +76,7 @@ public class JsonComparisonResultService implements IJsonComparisonResultService
             if (null == result.getRightSide()) {
                 missingSides.add("right");
             }
-            throw new NotCompletedComparisonException(comparisonId, missingSides);
+            throw new NotCompletedComparisonException(comparisonId, missingSides); // should wrap into Mono.error
         } else {
             return true;
         }

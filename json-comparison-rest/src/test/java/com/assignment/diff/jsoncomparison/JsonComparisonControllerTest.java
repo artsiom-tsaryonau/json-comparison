@@ -5,7 +5,6 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
 
 import com.assignment.diff.jsoncomparison.api.IJsonComparisonResultService;
 import com.assignment.diff.jsoncomparison.api.IJsonComparisonStoringService;
@@ -14,6 +13,10 @@ import com.assignment.diff.jsoncomparison.dto.JsonResponseMessage;
 
 import org.junit.Before;
 import org.junit.Test;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+import java.util.function.Consumer;
 
 /**
  * Tests for {@link JsonComparisonController}.
@@ -44,32 +47,47 @@ public class JsonComparisonControllerTest {
 
     @Test
     public void testUploadLeftSide() {
-        storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON_ENCODED);
-        expectLastCall();
+        var expected = createComparisonResult(COMPARISON_ID,
+            jsonComparisonResult -> jsonComparisonResult.setLeftSide(JSON_ENCODED));
+        expect(storingService.updateOrCreateLeftSide(COMPARISON_ID, JSON_ENCODED)).andReturn(Mono.just(expected));
         replay(storingService, comparisonService);
-        JsonResponseMessage<String> responseMessage = controller.uploadLeftSide(COMPARISON_ID, JSON_ENCODED);
-        assertEquals(new JsonResponseMessage<>(OK, STORED_MSG), responseMessage);
+        StepVerifier
+            .create(controller.uploadLeftSide(COMPARISON_ID, JSON_ENCODED))
+            .expectNext(new JsonResponseMessage<>(OK, STORED_MSG))
+            .verifyComplete();
         verify(storingService, comparisonService);
     }
 
     @Test
     public void testUploadRightSide() {
-        storingService.updateOrCreateRightSide(COMPARISON_ID, JSON_ENCODED);
+        var expected = createComparisonResult(COMPARISON_ID,
+            jsonComparisonResult -> jsonComparisonResult.setRightSide(JSON_ENCODED));
+        expect(storingService.updateOrCreateRightSide(COMPARISON_ID, JSON_ENCODED)).andReturn(Mono.just(expected));
         expectLastCall();
         replay(storingService);
-        JsonResponseMessage<String> responseMessage = controller.uploadRightSide(COMPARISON_ID, JSON_ENCODED);
-        assertEquals(new JsonResponseMessage<>(OK, STORED_MSG), responseMessage);
+        StepVerifier.create(controller.uploadRightSide(COMPARISON_ID, JSON_ENCODED))
+            .expectNext(new JsonResponseMessage<>(OK, STORED_MSG))
+            .verifyComplete();
         verify(storingService);
     }
 
     @Test
     public void testCheckComparisonResult() {
-        expect(comparisonService.getOrPerformComparison(COMPARISON_ID)).andReturn(createSameComparisonResult());
+        expect(comparisonService.getOrPerformComparison(COMPARISON_ID))
+            .andReturn(Mono.just(createSameComparisonResult()));
         replay(comparisonService);
-        JsonResponseMessage<JsonComparisonResultMessage> responseMessage =
-            controller.checkComparisonResult(COMPARISON_ID);
-        assertEquals(new JsonResponseMessage<>(OK, createResponseMessage()), responseMessage);
+        StepVerifier
+            .create(controller.checkComparisonResult(COMPARISON_ID))
+            .expectNext(new JsonResponseMessage<>(OK, createResponseMessage()))
+            .verifyComplete();
         verify(comparisonService);
+    }
+
+    private JsonComparisonResult createComparisonResult(String id, Consumer<JsonComparisonResult> sideUpdate) {
+        var comparisonResult = new JsonComparisonResult();
+        comparisonResult.setComparisonId(id);
+        sideUpdate.accept(comparisonResult);
+        return comparisonResult;
     }
 
     private JsonComparisonResult createSameComparisonResult() {

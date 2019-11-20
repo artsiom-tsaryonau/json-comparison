@@ -11,6 +11,8 @@ import com.assignment.diff.jsoncomparison.exception.NotCompletedComparisonExcept
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 /**
  * Tests for {@link JsonComparisonResultService}.
@@ -39,57 +41,68 @@ public class JsonComparisonResultServiceTest {
         ReflectionTestUtils.setField(comparisonResultService, "repository", repository);
     }
 
-    @Test(expected = NoComparisonFoundException.class)
+    @Test
     public void testGetOrPerformComparisonWhenNoResult() {
-        expect(repository.existsById(COMPARISON_ID)).andReturn(false);
+        expect(repository.findById(COMPARISON_ID))
+            .andReturn(Mono.error(new NoComparisonFoundException(COMPARISON_ID)));
         replay(repository);
-        comparisonResultService.getOrPerformComparison(COMPARISON_ID);
+        StepVerifier
+            .create(comparisonResultService.getOrPerformComparison(COMPARISON_ID))
+            .expectErrorMatches(throwable -> throwable instanceof NoComparisonFoundException)
+            .verify();
         verify(repository);
     }
 
-    @Test(expected = NotCompletedComparisonException.class)
+    @Test
     public void testGetOrPerformComparisonWhenSideIsBlank() {
-        expect(repository.existsById(COMPARISON_ID)).andReturn(true);
-        expect(repository.getOne(COMPARISON_ID)).andReturn(createJsonComparisonResult());
+        expect(repository.findById(COMPARISON_ID)).andReturn(Mono.just(createJsonComparisonResult()));
         replay(repository);
-        comparisonResultService.getOrPerformComparison(COMPARISON_ID);
+        StepVerifier
+            .create(comparisonResultService.getOrPerformComparison(COMPARISON_ID))
+            .expectErrorMatches(throwable -> throwable instanceof NotCompletedComparisonException)
+            .verify();
         verify(repository);
     }
 
     @Test
     public void testGetOrPerformComparisonWhenDifferentLength() {
         var updated = createJsonComparisonResult(ComparisonDecision.DIFFERENT_SIZE, JSON_1, JSON_2);
-        expect(repository.existsById(COMPARISON_ID)).andReturn(true);
-        expect(repository.getOne(COMPARISON_ID))
-            .andReturn(createJsonComparisonResult(ComparisonDecision.NONE, JSON_1, JSON_2));
-        expect(repository.save(updated)).andReturn(updated);
+        expect(repository.findById(COMPARISON_ID))
+            .andReturn(Mono.just(createJsonComparisonResult(ComparisonDecision.NONE, JSON_1, JSON_2)));
+        expect(repository.save(updated)).andReturn(Mono.just(updated));
         replay(repository);
-        comparisonResultService.getOrPerformComparison(COMPARISON_ID);
+        StepVerifier
+            .create(comparisonResultService.getOrPerformComparison(COMPARISON_ID))
+            .expectNext(updated)
+            .verifyComplete();
         verify(repository);
     }
 
     @Test
     public void testGetOrPerformComparisonWhenSameLength() {
-        var updated = createJsonComparisonResult(ComparisonDecision.DIFFERENT, JSON_1, JSON_3,
-            JSON_3_1_DIFF);
-        expect(repository.existsById(COMPARISON_ID)).andReturn(true);
-        expect(repository.getOne(COMPARISON_ID))
-            .andReturn(createJsonComparisonResult(ComparisonDecision.NONE, JSON_1, JSON_3));
-        expect(repository.save(updated)).andReturn(updated);
+        var updated = createJsonComparisonResult(ComparisonDecision.DIFFERENT, JSON_1, JSON_3, JSON_3_1_DIFF);
+        expect(repository.findById(COMPARISON_ID))
+            .andReturn(Mono.just(createJsonComparisonResult(ComparisonDecision.NONE, JSON_1, JSON_3)));
+        expect(repository.save(updated)).andReturn(Mono.just(updated));
         replay(repository);
-        comparisonResultService.getOrPerformComparison(COMPARISON_ID);
+        StepVerifier
+            .create(comparisonResultService.getOrPerformComparison(COMPARISON_ID))
+            .expectNext(updated)
+            .verifyComplete();
         verify(repository);
     }
 
     @Test
     public void testGetOrPerformComparisonWhenSameLengthAndSameValue() {
         var updated = createJsonComparisonResult(ComparisonDecision.SAME, JSON_1, JSON_1);
-        expect(repository.existsById(COMPARISON_ID)).andReturn(true);
-        expect(repository.getOne(COMPARISON_ID))
-            .andReturn(createJsonComparisonResult(ComparisonDecision.NONE, JSON_1, JSON_1));
-        expect(repository.save(updated)).andReturn(updated);
+        expect(repository.findById(COMPARISON_ID))
+            .andReturn(Mono.just(createJsonComparisonResult(ComparisonDecision.NONE, JSON_1, JSON_1)));
+        expect(repository.save(updated)).andReturn(Mono.just(updated));
         replay(repository);
-        comparisonResultService.getOrPerformComparison(COMPARISON_ID);
+        StepVerifier
+            .create(comparisonResultService.getOrPerformComparison(COMPARISON_ID))
+            .expectNext(updated)
+            .verifyComplete();
         verify(repository);
     }
 

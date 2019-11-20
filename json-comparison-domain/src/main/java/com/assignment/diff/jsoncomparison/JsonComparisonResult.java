@@ -2,13 +2,11 @@ package com.assignment.diff.jsoncomparison;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * Result of comparison between to JSON.
@@ -19,20 +17,22 @@ import javax.persistence.Table;
  *
  * @author Artsiom Tsaryonau
  */
-@Entity
-@Table(name = "json_comparison")
-public class JsonComparisonResult {
-    @Column(name = "comparison_id")
+@Table("json_comparison")
+public class JsonComparisonResult implements Persistable<String> {
+    @Column("comparison_id")
     @Id
     private String comparisonId;
-    @Column(name = "left")
+    @Column("left_side")
     private String leftSide;
-    @Column(name = "right")
+    @Column("right_side")
     private String rightSide;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "decision")
+    // @Enumerated(EnumType.STRING) - no support for now
+    @Column("decision")
     private ComparisonDecision decision;
     private String differences;
+
+    @Transient
+    private boolean isNew;
 
     public String getComparisonId() {
         return comparisonId;
@@ -74,6 +74,10 @@ public class JsonComparisonResult {
         this.differences = differences;
     }
 
+    public void setIsNew(boolean isNew) {
+        this.isNew = isNew;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -104,5 +108,15 @@ public class JsonComparisonResult {
             .append(decision)
             .append(differences)
             .toHashCode();
+    }
+
+    @Override
+    public String getId() {
+        return comparisonId;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
     }
 }
