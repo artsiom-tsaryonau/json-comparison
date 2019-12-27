@@ -36,6 +36,7 @@ subprojects {
 
     pmd {
         ignoreFailures = true
+        sourceSets = [sourceSets.main]
     }
 
     spotbugs {
