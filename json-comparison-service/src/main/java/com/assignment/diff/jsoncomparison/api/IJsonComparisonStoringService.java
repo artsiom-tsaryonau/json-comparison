@@ -17,12 +17,14 @@ public interface IJsonComparisonStoringService {
      * Stores left side of JSON comparison.
      * @param comparisonId comparison id
      * @param json json to store
+     * @return comparison result
      */
     Mono<JsonComparisonResult> updateOrCreateLeftSide(String comparisonId, String json);
     /**
      * Store right side of JSON comparison.
      * @param comparisonId comparison id
      * @param json json to store
+     * @return comparison result
      */
     Mono<JsonComparisonResult> updateOrCreateRightSide(String comparisonId, String json);
 }

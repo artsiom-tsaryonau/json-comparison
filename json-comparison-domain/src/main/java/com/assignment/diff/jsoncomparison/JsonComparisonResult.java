@@ -32,7 +32,7 @@ public class JsonComparisonResult implements Persistable<String> {
     private String differences;
 
     @Transient
-    private boolean isNew;
+    private transient boolean isNewObject;
 
     public String getComparisonId() {
         return comparisonId;
@@ -75,7 +75,17 @@ public class JsonComparisonResult implements Persistable<String> {
     }
 
     public void setIsNew(boolean isNew) {
-        this.isNew = isNew;
+        this.isNewObject = isNew;
+    }
+
+    @Override
+    public String getId() {
+        return comparisonId;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNewObject;
     }
 
     @Override
@@ -108,15 +118,5 @@ public class JsonComparisonResult implements Persistable<String> {
             .append(decision)
             .append(differences)
             .toHashCode();
-    }
-
-    @Override
-    public String getId() {
-        return comparisonId;
-    }
-
-    @Override
-    public boolean isNew() {
-        return isNew;
     }
 }

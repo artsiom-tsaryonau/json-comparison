@@ -52,11 +52,12 @@ public class JsonComparisonStoringService implements IJsonComparisonStoringServi
         });
     }
 
-    private Mono<JsonComparisonResult> updateComparisonSide(String comparisonId,
-                                                            Function<JsonComparisonResult, JsonComparisonResult> updateSide) {
+    private Mono<JsonComparisonResult> updateComparisonSide(String comparisonId, Function<JsonComparisonResult,
+            JsonComparisonResult> updateSide) {
         return repository.findById(comparisonId)
             .defaultIfEmpty(createResult(comparisonId))
-            .filter(result -> ComparisonDecision.NONE == result.getDecision()) // if not NONE - it means it was found and completed
+            // if not NONE - it means it was found and completed
+            .filter(result -> ComparisonDecision.NONE == result.getDecision())
             .switchIfEmpty(Mono.error(new NotUpdatableCompleteComparisonException(comparisonId)))
             .map(updateSide)
             .flatMap(repository::save);

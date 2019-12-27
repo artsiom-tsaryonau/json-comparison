@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.r2dbc.core.DatabaseClient;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -20,6 +21,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 @EnableSwagger2
 @SpringBootApplication
@@ -68,15 +70,16 @@ public class JsonComparisonApplication {
     @Bean
     public CommandLineRunner startup(DatabaseClient client) {
         return (args) -> client
-            .execute(() -> {
-                var resource = new ClassPathResource("ddl/script.sql");
-                try (var is = new InputStreamReader(resource.getInputStream())) {
-                    return FileCopyUtils.copyToString(is);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            })
+            .execute(() -> readFileToString(new ClassPathResource("ddl/script.sql")))
             .then()
             .block();
+    }
+
+    private String readFileToString(Resource resource) {
+        try (var is = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8)) {
+            return FileCopyUtils.copyToString(is);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
